@@ -1,12 +1,12 @@
 
 bijankhan_tags,./_data/bijankhan/tags.txt
-bijankhan_unprocessed,./_data/bijankhan/raw/Bijan_.txt
-bijankhan_sents_raw,./_data/bijankhan/bijankhan_sents_raw.txt
-bijankhan_whole_raw,./_data/bijankhan/bijankhan_whole_raw.txt
-bijankhan_sents_tok,./_data/bijankhan/bijankhan_sents_tok.txt
-bijankhan_whole_tok,./_data/bijankhan/bijankhan_whole_tok.txt
-peykareh_unprocessed,./_data/peykareh/raw/Peykareh_.txt
-peykareh_sents_raw,./_data/peykareh/peykareh_sents_raw.txt
-peykareh_whole_raw,./_data/peykareh/peykareh_whole_raw.txt
-peykareh_sents_tok,./_data/peykareh/peykareh_sents_tok.txt
-peykareh_whole_tok,./_data/peykareh/peykareh_whole_tok.txt
+bijankhan_unprocessed,./_data/bijankhan_corpus/raw/Bijan_.txt
+bijankhan_sents_raw,./_data/bijankhan_corpus/bijankhan_sents_raw.txt
+bijankhan_whole_raw,./_data/bijankhan_corpus/bijankhan_whole_raw.txt
+bijankhan_sents_tok,./_data/bijankhan_corpus/bijankhan_sents_tok.txt
+bijankhan_whole_tok,./_data/bijankhan_corpus/bijankhan_whole_tok.txt
+peykareh_unprocessed,./_data/peykareh_corpus/raw/Peykareh_.txt
+peykareh_sents_raw,./_data/peykareh_corpus/peykareh_sents_raw.txt
+peykareh_whole_raw,./_data/peykareh_corpus/peykareh_whole_raw.txt
+peykareh_sents_tok,./_data/peykareh_corpus/peykareh_sents_tok.txt
+peykareh_whole_tok,./_data/peykareh_corpus/peykareh_whole_tok.txt
