@@ -30,7 +30,7 @@ class Loader:
          Loads the corpus and builds it if needed.
      """
 
-    def __init__(self, tok_delim="\b", sent_delim="\n"):
+    def __init__(self,base_directory="./", tok_delim="\b", sent_delim="\n"):
         """
         Parameters
         ----------
@@ -39,7 +39,8 @@ class Loader:
         sent_delim : str, optional
             A string representing the sentence delimiter (default is "\n").
         """
-        self._filehandler = Handler()
+        self._filehandler = Handler(base_directory=base_directory)
+        self.base_directory = base_directory
         self._corpus_path = {'bijankhan': self._filehandler.get_file("bijankhan_unprocessed"),
                              'peykareh': self._filehandler.get_file("peykareh_unprocessed")}
 
@@ -70,7 +71,7 @@ class Loader:
         if not os.path.isfile(self._filehandler.get_file(file_key)):
             print(f"Requested version not found corpus_name: {corpus_name}, corpus_type: {corpus_type}")
             print("building the corpus")
-            return Builder().build_corpus(corpus_name, corpus_type)
+            return Builder(base_directory=self.base_directory).build_corpus(corpus_name, corpus_type)
 
         file_path = self._filehandler.get_file(file_key)
         if corpus_type.value == Type.whole_raw.value:

@@ -6,7 +6,7 @@ from .corpus_type import Type
 
 
 class Handler:
-    def __init__(self, base_directory="./", filenames="./_data/_filenames.csv"):
+    def __init__(self, base_directory="./", filenames="_data/_filenames.csv"):
         """
         Initializes the CorpusHandler class with a directory to search and a file that contains the filenames and
         their paths.
@@ -17,7 +17,7 @@ class Handler:
         self.directory = base_directory
         self._corpus_names = ['bijankhan', 'peykareh']
         self._corpus_types = [e for e in Type]
-        self.filenames = filenames
+        self.filenames = self.directory+filenames
         self._files = {}
         self._load_filenames()
 
@@ -30,7 +30,7 @@ class Handler:
                 reader = csv.reader(file)
                 next(reader)
                 for row in reader:
-                    self._files[row[0]] = row[1]
+                    self._files[row[0]] = self.directory+row[1]
         except Exception as e:
             print("unable to find filenames.csv", e)
 

@@ -40,8 +40,8 @@ class Builder:
             _punc_corrections (dict): A dictionary containing the punctuation corrections.
         """
 
-    def __init__(self, tok_delim="\b", sent_delim="\n"):
-        self._filehandler = Handler()
+    def __init__(self, base_directory="./", tok_delim="\b", sent_delim="\n"):
+        self._filehandler = Handler(base_directory=base_directory)
         self._corpus = {'bijankhan': self._filehandler.get_file("bijankhan_unprocessed"),
                         'peykareh': self._filehandler.get_file("peykareh_unprocessed")}
         self._sent_div = {".", "?", "؟", "!"}
