@@ -21,7 +21,7 @@ model_dir = f"./Model/"
 tokenizer = AutoTokenizer.from_pretrained(pretrained_model)
 data_collator = DataCollatorForTokenClassification(tokenizer=tokenizer)
 model = AutoModelForTokenClassification.from_pretrained(pretrained_model, num_labels=3)
-dataset = DatasetDict().load_from_disk("./../_data/datasets/batched/bert-mult-uncased/")
+dataset = DatasetDict().load_from_disk("../_data/datasets/batched/bert-base-multilingual-uncased/")
 
 training_args = TrainingArguments(
     output_dir=model_dir,
