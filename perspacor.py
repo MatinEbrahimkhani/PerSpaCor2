@@ -1,14 +1,13 @@
-
 from sklearn.metrics import classification_report
 import torch
 from transformers import BertTokenizer, BertForTokenClassification
 from corpus_processor import Type
-from labeler import Labeler,Evaluator
+from labeler import Labeler, Evaluator
+
 
 # noinspection PyTypeChecker
 class PerSpaCor:
-    def __init__(self,
-                 model_path="./Model_01.01/04/model/"):
+    def __init__(self, model_path):
         self.__model_path = model_path
         self._tokenizer = BertTokenizer.from_pretrained(model_path)
         self._model = BertForTokenClassification.from_pretrained(model_path, num_labels=3)
@@ -54,7 +53,6 @@ class PerSpaCor:
         logits = self._model(input_ids).logits
         predicted_labels = torch.argmax(logits, dim=-1)
         if report:
-
             predictions_flat = [label for sample in predicted_labels.tolist() for label in sample]
             true_labels_flat = [label for sample in [labels] for label in sample]
 
@@ -76,7 +74,9 @@ class PerSpaCor:
         return self._labeler.text_generator([' '] + chars + [' '],
                                             predicted_labels,
                                             corpus_type=Type.whole_raw)
-corrector = PerSpaCor()
+
+
+corrector = PerSpaCor(model_path="### MODEL PATH ###")
 # Read the contents of the input file
 with open('input.txt', 'r', encoding='utf-8') as file:
     text = file.read()

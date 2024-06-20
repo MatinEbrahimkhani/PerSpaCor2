@@ -1,8 +1,8 @@
 from datasets import DatasetDict
 from transformers import AutoModelForTokenClassification, Trainer, TrainingArguments
 
-from utils.label_evaluator import Evaluator
-from corpus import Type
+from labeler import Evaluator
+from corpus_processor import Type
 
 for pretrained_model in ["bert-base-multilingual-uncased",
                          "bert-base-multilingual-cased",

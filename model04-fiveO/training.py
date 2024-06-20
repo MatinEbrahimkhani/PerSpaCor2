@@ -1,27 +1,48 @@
 from transformers import (DataCollatorForTokenClassification,
                           AutoTokenizer, AutoModelForTokenClassification)
-
+import torch
+import torch.nn as nn
 from transformers import Trainer, TrainingArguments
 from datasets import Dataset, DatasetDict
 
-# pretrained_model = "HooshvareLab/bert-base-parsbert-uncased"
+
 pretrained_model = "bert-base-multilingual-uncased"
-# pretrained_model = "imvladikon/charbert-roberta-wiki"
-# pretrained_model = "HooshvareLab/roberta-fa-zwnj-base"
-# pretrained_model = "HooshvareLab/bert-fa-zwnj-base"
-# pretrained_model = "HooshvareLab/bert-base-parsbert-uncased"
-# pretrained_model = "bert-base-multilingual-uncased"
-# pretrained_model = "bert-base-multilingual-cased"
-# for  pretrained_model in ["bert-base-multilingual-cased","HooshvareLab/bert-base-parsbert-uncased","HooshvareLab/bert-fa-zwnj-base", "HooshvareLab/roberta-fa-zwnj-base","imvladikon/charbert-roberta-wiki"]:
-
-
-print(pretrained_model)
 model_dir = f"Model/"
 
 tokenizer = AutoTokenizer.from_pretrained(pretrained_model)
 data_collator = DataCollatorForTokenClassification(tokenizer=tokenizer)
-model = AutoModelForTokenClassification.from_pretrained(pretrained_model, num_labels=3)
 dataset = DatasetDict().load_from_disk("../_data/datasets/batched/bert-base-multilingual-uncased/")
+
+
+class FiveOClassifier(nn.Module):
+    def __init__(self, clf_hidden_size, clf_num_labels):
+        super(FiveOClassifier, self).__init__()
+        self.dense1 = nn.Linear(clf_hidden_size, clf_hidden_size // 2)
+        self.activation1 = nn.ReLU()
+        self.dropout1 = nn.Dropout(p=0.1)
+        self.dense2 = nn.Linear(clf_hidden_size // 2, clf_hidden_size // 4)
+        self.activation2 = nn.ReLU()
+        self.dropout2 = nn.Dropout(p=0.1)
+        self.output_layer = nn.Linear(clf_hidden_size // 4, clf_num_labels)
+
+    def forward(self, clf_input):
+        x = self.dense1(clf_input)
+        x = self.activation1(x)
+        x = self.dropout1(x)
+        x = self.dense2(x)
+        x = self.activation2(x)
+        x = self.dropout2(x)
+        x = self.output_layer(x)
+        return x
+
+model = AutoModelForTokenClassification.from_pretrained(pretrained_model, num_labels=3)
+# Get the hidden size from the original model
+hidden_size = model.config.hidden_size
+# Define the number of labels (change this based on your specific task)
+num_labels = model.config.num_labels
+fiveo_classifier = FiveOClassifier(hidden_size, num_labels)
+model.classifier = fiveo_classifier
+print(model)
 
 training_args = TrainingArguments(
     output_dir=model_dir,
