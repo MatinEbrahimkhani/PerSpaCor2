@@ -90,7 +90,7 @@ def main(model_path, input_file, output_file):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description='Correct text using a BERT model.')
+    parser = argparse.ArgumentParser(description='Spacing text using a BERT model.')
     parser.add_argument('--model_path', type=str, required=True, help='Path to the model directory')
     parser.add_argument('--input_file', type=str, required=True, help='Path to the input file')
     parser.add_argument('--output_file', type=str, required=True, help='Path to the output file')
