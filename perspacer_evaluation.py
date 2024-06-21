@@ -4,13 +4,12 @@ from transformers import AutoModelForTokenClassification, Trainer, TrainingArgum
 from labeler import Evaluator
 from corpus_processor import Type
 
-pretrained_model="bert-base-multilingual-uncased"
+pretrained_model = "bert-base-multilingual-uncased"
 
-
-print("_"*20)
-print(" "*10, end='')
+print("_" * 20)
+print(" " * 10, end='')
 print(pretrained_model)
-print("_"*20)
+print("_" * 20)
 
 model_dir = f"./Model_01.01/{pretrained_model}/model/"
 dataset_dir = f"./built_datasets/{pretrained_model}/all.01/"
@@ -28,7 +27,6 @@ predicted_labels = predictions.predictions.argmax(axis=-1)
 evaluator = Evaluator(labels=(0, 1, 2))
 evaluator.evaluate(dataset['test']['labels'], predicted_labels, Type.sents_raw)
 evaluator.show_metrics()
-
 
 ## FOR TWO CLASS EVALUATION
 # c2_predictions = [[1 if val == 2 else val for val in row] for row in predicted_labels]
