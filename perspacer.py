@@ -1,3 +1,4 @@
+import argparse
 from sklearn.metrics import classification_report
 import torch
 from transformers import BertTokenizer, BertForTokenClassification
@@ -6,7 +7,7 @@ from labeler import Labeler, Evaluator
 
 
 # noinspection PyTypeChecker
-class PerSpaCor:
+class PerSpacer:
     def __init__(self, model_path):
         self.__model_path = model_path
         self._tokenizer = BertTokenizer.from_pretrained(model_path)
@@ -76,14 +77,23 @@ class PerSpaCor:
                                             corpus_type=Type.whole_raw)
 
 
-corrector = PerSpaCor(model_path="### MODEL PATH ###")
-# Read the contents of the input file
-with open('input.txt', 'r', encoding='utf-8') as file:
-    text = file.read()
+def main(model_path, input_file, output_file):
+    corrector = PerSpacer(model_path=model_path)
 
-# Correct the text
-corrected_text = corrector.correct(text)
+    with open(input_file, 'r', encoding='utf-8') as file:
+        text = file.read()
 
-# Write the corrected text to the output file
-with open('output.txt', 'w', encoding='utf-8') as file:
-    file.write(corrected_text)
+    corrected_text = corrector.correct(text)
+
+    with open(output_file, 'w', encoding='utf-8') as file:
+        file.write(corrected_text)
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description='Correct text using a BERT model.')
+    parser.add_argument('--model_path', type=str, required=True, help='Path to the model directory')
+    parser.add_argument('--input_file', type=str, required=True, help='Path to the input file')
+    parser.add_argument('--output_file', type=str, required=True, help='Path to the output file')
+
+    args = parser.parse_args()
+    main(model_path=args.model_path, input_file=args.input_file, output_file=args.output_file)
