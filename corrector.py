@@ -6,8 +6,7 @@ from corpus_processor import Type
 from labeler import Labeler, Evaluator
 
 
-# noinspection PyTypeChecker
-class PerSpacer:
+class TextSpacer:
     def __init__(self, model_path):
         self.__model_path = model_path
         self._tokenizer = BertTokenizer.from_pretrained(model_path)
@@ -28,7 +27,8 @@ class PerSpacer:
         return input_ids
 
     def test(self):
-        text = "منبع: (مجله سروش هفتگی، مصاحبه با رئیس دفتر الجزیره در تهران، یک هزار و سیصد و هشتاد) الجزیره هیچ ارتباط خاصی با طالبان ندارد. "
+        text = ("منبع: (مجله سروش هفتگی، مصاحبه با رئیس دفتر الجزیره در تهران، یک هزار و سیصد و هشتاد) الجزیره هیچ "
+                "ارتباط خاصی با طالبان ندارد.")
         chars, _ = self._labeler.label_text(text, corpus_type=Type.whole_raw)
         input_ids = self._tokenize(chars, chunk_size=512)
         input_ids = torch.tensor(input_ids)
@@ -44,8 +44,12 @@ class PerSpacer:
         evaluator.evaluate(true_labels, predictions, Type.whole_raw)
         evaluator.show_metrics()
 
-    def correct(self, text, report=True):
 
+class PerSpacer(TextSpacer):
+    def __init__(self, model_path):
+        super().__init__(model_path)
+
+    def correct(self, text, report=True):
         chars, labels = self._labeler.label_text(text, corpus_type=Type.whole_raw)
         input_ids = self._tokenize(chars, chunk_size=512)
         input_ids = torch.tensor(input_ids)
@@ -72,13 +76,49 @@ class PerSpacer:
             print(predicted_text)
             # Print the report to the console
             print(cls_report)
-        return self._labeler.text_generator([' '] + chars + [' '],
+        return self._labeler.text_generator(['$'] + chars + ['$'],
+                                            predicted_labels,
+                                            corpus_type=Type.whole_raw)
+
+
+class PerSpaCor(TextSpacer):
+    def __init__(self, model_path):
+        super().__init__(model_path)
+
+    def correct(self, text, report=True):
+        chars, labels = self._labeler.label_text(text, corpus_type=Type.whole_raw)
+        input_ids = self._tokenize(chars, chunk_size=512)
+        input_ids = torch.tensor(input_ids)
+
+        labels = [0] + labels + [0]
+        logits = self._model(input_ids).logits
+        predicted_labels = torch.argmax(logits, dim=-1)
+        if report:
+            predictions_flat = [label for sample in predicted_labels.tolist() for label in sample]
+            true_labels_flat = [label for sample in [labels] for label in sample]
+
+            cls_report = classification_report(true_labels_flat, predictions_flat, digits=5)
+
+            true_text = self._labeler.text_generator([' '] + chars + [' '],
+                                                     [labels],
+                                                     corpus_type=Type.whole_raw)
+            print(" TRUE TEXT ")
+            print(true_text)
+
+            predicted_text = self._labeler.text_generator([' '] + chars + [' '],
+                                                          predicted_labels,
+                                                          corpus_type=Type.whole_raw)
+            print(" PREDICTED TEXT ")
+            print(predicted_text)
+            # Print the report to the console
+            print(cls_report)
+        return self._labeler.text_generator(['$'] + chars + ['$'],
                                             predicted_labels,
                                             corpus_type=Type.whole_raw)
 
 
 def main(model_path, input_file, output_file):
-    corrector = PerSpacer(model_path=model_path)
+    corrector = PerSpaCor(model_path=model_path)
 
     with open(input_file, 'r', encoding='utf-8') as file:
         text = file.read()
@@ -90,7 +130,7 @@ def main(model_path, input_file, output_file):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description='Spacing text using a BERT model.')
+    parser = argparse.ArgumentParser(description='Correct text using a BERT model.')
     parser.add_argument('--model_path', type=str, required=True, help='Path to the model directory')
     parser.add_argument('--input_file', type=str, required=True, help='Path to the input file')
     parser.add_argument('--output_file', type=str, required=True, help='Path to the output file')
