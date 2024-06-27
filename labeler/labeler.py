@@ -185,7 +185,7 @@ class Labeler:
 
         return ''.join(result)
 
-    def text_generator(self, chars, labels, corpus_type: type):
+    def text_generator(self, chars, labels, corpus_type: Ctype):
         if corpus_type.value == Ctype.sents_raw.value:
             result = []
             for sent_chars, sent_labels in zip(chars, labels):
