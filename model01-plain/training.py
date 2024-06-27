@@ -2,7 +2,8 @@ from transformers import (DataCollatorForTokenClassification,
                           AutoTokenizer, AutoModelForTokenClassification)
 
 from transformers import Trainer, TrainingArguments
-from datasets import Dataset, DatasetDict
+from datasets import DatasetDict
+import torch
 
 # pretrained_model = "HooshvareLab/bert-base-parsbert-uncased"
 pretrained_model = "bert-base-multilingual-uncased"
@@ -29,7 +30,7 @@ training_args = TrainingArguments(
     # do_eval=True,
     # do_predict=True,
     learning_rate=2e-5,
-    num_train_epochs=1,
+    num_train_epochs=5,
     auto_find_batch_size=True,
     # per_device_train_batch_size=1,
     gradient_accumulation_steps=8,
@@ -54,7 +55,6 @@ trainer = Trainer(
     eval_dataset=dataset['validation'],
     tokenizer=tokenizer,
 )
-import torch
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 print('Using device:', device)
