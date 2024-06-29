@@ -154,7 +154,7 @@ class Labeler:
                 self.data = textinput
 
                 self.corpus_type = corpus_type
-                print("input data is in str format")
+                # print("input data is in str format")
 
         elif corpus_type.value == Ctype.sents_raw.value and type(textinput) == list:
             self.data = textinput
