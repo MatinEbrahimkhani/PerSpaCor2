@@ -40,11 +40,9 @@ def main(model_dir, dataset_dir, output_dir):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Train and evaluate a token classification model.')
-    parser.add_argument('--model', choices=['perspacor', 'perspacer'], help="The model to use for text spacing")
-
-    parser.add_argument('--model_dir', type=str, default="./Model_01.01/bert-base-multilingual-uncased/model/",
+    parser.add_argument('--model_dir', type=str, default="./model01-plain/Model/model/",
                         help='Path to the model directory')
-    parser.add_argument('--dataset_dir', type=str, default="./built_datasets/bert-base-multilingual-uncased/all.01/",
+    parser.add_argument('--dataset_dir', type=str, default="./_data/datasets/batched/bert-base-multilingual-uncased/",
                         help='Path to the dataset directory')
     parser.add_argument('--output_dir', type=str, default="./Model_01.01/bert-base-multilingual-uncased/results/",
                         help='Path to the output directory')
