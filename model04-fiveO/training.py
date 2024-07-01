@@ -5,7 +5,6 @@ import torch.nn as nn
 from transformers import Trainer, TrainingArguments
 from datasets import Dataset, DatasetDict
 
-
 pretrained_model = "bert-base-multilingual-uncased"
 model_dir = f"Model/"
 
@@ -35,10 +34,11 @@ class FiveOClassifier(nn.Module):
         x = self.output_layer(x)
         return x
 
+
 model = AutoModelForTokenClassification.from_pretrained(pretrained_model, num_labels=3)
-# Get the hidden size from the original model
+
 hidden_size = model.config.hidden_size
-# Define the number of labels (change this based on your specific task)
+
 num_labels = model.config.num_labels
 fiveo_classifier = FiveOClassifier(hidden_size, num_labels)
 model.classifier = fiveo_classifier

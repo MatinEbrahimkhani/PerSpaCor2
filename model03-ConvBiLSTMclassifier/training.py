@@ -39,9 +39,9 @@ class ConvBiLSTMClassifier(nn.Module):
 
 
 model = AutoModelForTokenClassification.from_pretrained(pretrained_model, num_labels=3)
-# Get the hidden size from the original model
+
 hidden_size = model.config.hidden_size
-# Define the number of labels (change this based on your specific task)
+
 num_labels = model.config.num_labels
 conv_bilstm_classifer = ConvBiLSTMClassifier(hidden_size, num_labels)
 model.classifier = conv_bilstm_classifer
